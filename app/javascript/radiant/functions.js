@@ -18,15 +18,15 @@ const drawRadiant = (context, x, y, x1, y1, hasCollided) => {
 }
 
 
-const drawQuadrant = (midX, midY) => {
+const drawQuadrant = (context, midX, midY) => {
   const length = 100;
   const negYEnd = midY - length;
   const posYEnd = midY + length;
   const negXEnd = midX - length;
   const posXEnd = midX + length;
   const textOffSet = 20;
-  //context.fillText("y", midX, negYEnd - textOffSet);
-  //context.fillText("x", posXEnd + textOffSet, midY);
+  context.fillText("y", midX, negYEnd - textOffSet);
+  context.fillText("x", posXEnd + textOffSet, midY);
   return [
     { x: midX, y: midY, x1: midX, y1: negYEnd },
     { x: midX, y: midY, x1: midX, y1: posYEnd },

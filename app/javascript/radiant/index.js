@@ -83,7 +83,7 @@ export default (props) => {
     if(!contextRef.current) return;
     onDrawRadiant();
     setEl(canvas);
-    setReferences(drawQuadrant(canvasMidW(), canvasMidH()));
+    setReferences(drawQuadrant(contextRef.current, canvasMidW(), canvasMidH()));
   }, [contextRef.current]);
 
   const handleSetAngle = (e) => {
