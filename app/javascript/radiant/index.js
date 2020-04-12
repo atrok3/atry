@@ -2,7 +2,6 @@ import React from "react";
 import Reference from "../reference";
 import useTouch from "../use_touch";
 import useTouchCollision from "../use_touch_collision";
-import "./style.css";
 import { drawRadiant, drawQuadrant, drawTouchReference } from "./functions";
 import Arc from "../arc";
 
