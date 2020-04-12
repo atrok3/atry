@@ -9,7 +9,7 @@
   z-index: 2000;
   padding: 20px;
   background-color: rgba(0, 0, 0, 0.6);
-  display: none;
+  display: block;
 }
 
 .dialog-outer{
@@ -23,8 +23,8 @@
   vertical-align: middle;
 }
 
-.dialog-open {
-  display: block;
+.dialog-closed {
+  display: none;
 }
 
 .dialog-box{
