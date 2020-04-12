@@ -111,7 +111,7 @@ export default (props) => {
 
   return (
     <>
-      <div className={`dialog ${ active.length !== 2 ? 'dialog-closed' : '' }`}>
+      <div className={`dialog ${ active.length === 2 ? 'dialog-open' : '' }`}>
         <div className="dialog-outer">
           <div className="dialog-inner">
             <div className="dialog-box">
