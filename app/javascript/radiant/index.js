@@ -111,26 +111,30 @@ export default (props) => {
 
   return (
     <>
-      <div className={`dialog ${ active.length === 2 ? 'dialog-open' : '' }`}>
-        <div className="dialog-outer">
-          <div className="dialog-inner">
-            <div className="dialog-box">
-              <button className="float-right" onClick={ closeActive }>close</button>
-              <form className="clear-both" onSubmit={ handleSetAngle }>
-                <div>
-                  <input ref={ magRef } placeholder="Magnitude of angle" />
+      {
+        active.length === 2?
+          <div className={`dialog`}>
+            <div className="dialog-outer">
+              <div className="dialog-inner">
+                <div className="dialog-box">
+                  <button className="float-right" onClick={ closeActive }>close</button>
+                  <form className="clear-both" onSubmit={ handleSetAngle }>
+                    <div>
+                      <input ref={ magRef } placeholder="Magnitude of angle" />
+                    </div>
+                    <div>
+                      <input ref={ antiClockwiseRef } type="checkbox" />
+                    </div>
+                    <div className="float-right">
+                      <input type="submit" value="Ok" />
+                    </div>
+                  </form>
                 </div>
-                <div>
-                  <input ref={ antiClockwiseRef } type="checkbox" />
-                </div>
-                <div className="float-right">
-                  <input type="submit" value="Ok" />
-                </div>
-              </form>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
+        : null
+      }
       {
         references.map((r, i) => <Reference key={ i } reference={ r } { ...props } { ...{ c, clear, handleActive } } />)
       }
