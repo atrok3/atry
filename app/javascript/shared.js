@@ -8,7 +8,7 @@ const drawArrow = (context, fromx, fromy, tox, toy) => {
   context.lineTo(tox - headlen * Math.cos(angle + Math.PI / 6), toy - headlen * Math.sin(angle + Math.PI / 6));
 }
 
-const drawReference = (context, x, y, x1, y1, opacity = 1) => {
+const drawReference = (context, x, y, x1, y1, opacity = 1, arrow = false) => {
   if(!context) return;
   context.save();
   context.beginPath();
@@ -20,8 +20,8 @@ const drawReference = (context, x, y, x1, y1, opacity = 1) => {
   context.restore();
 }
 
-const getClientX = (e) => e.clientX? e.clientX : e.touches[0].clientX;
-const getClientY = (e) => e.clientY? e.clientY : e.touches[0].clientY;
+const getClientX = (e) => e.clientX? e.clientX : e.touches? e.touches[0].clientX : null;
+const getClientY = (e) => e.clientY? e.clientY : e.touches? e.touches[0].clientY : null;
 
 const getCoords = (e) => ({ x: getClientX(e), y: getClientY(e) });
 
