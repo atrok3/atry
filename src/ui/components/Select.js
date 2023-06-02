@@ -8,7 +8,8 @@ import {
 const Select = ({
     value,
     onChange,
-    options
+    options,
+    name,
 }) => {
     return (
         <FormControl
@@ -17,6 +18,7 @@ const Select = ({
             fullWidth
         >
             <S
+                name={name}
                 value={value}
                 onChange={onChange}
             >

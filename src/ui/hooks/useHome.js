@@ -48,7 +48,7 @@ const useHome = () => {
 
   const onClear = () => {
     Canvas.context.clearRect(0, 0, Canvas.width, Canvas.height);
-    Beam.drawMarked(Beam.s1.textOffset, Beam.s2.textOffset);
+    //Beam.drawMarked(Beam.s1.textOffset, Beam.s2.textOffset);
     Beam.loads = [];
   }
 

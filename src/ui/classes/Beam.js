@@ -3,7 +3,7 @@ import PointLoad from "./PointLoad";
 import DLine from "./DLine";
 import PinSupport from "./PinSupport";
 import Mark from "./Mark";
-import { DOWN, M, PL, UDL } from "../../../consts";
+import { ANTICLOCKWISE, CLR, CLOCKWISE, DOWN, M, PL, SS, UDL } from "../../../consts";
 import _UDL from "./UDL";
 import Moment from "./Moment";
 
@@ -26,24 +26,26 @@ class Beam {
   static s1;
   static s2;
 
-  static addLoad(load, type){
+  static type = SS;
+
+  static addLoad(load, type) {
     let l;
     const {
-      mag, 
-      pos, 
+      mag,
+      pos,
       direction
     } = load;
-    if(type == PL){
+    if (type == PL) {
       l = new PointLoad(mag * 1, pos * 1, direction);
-    }else if(type == UDL){
+    } else if (type == UDL) {
       l = new _UDL(mag * 1, load.startPos * 1, pos * 1, direction);
-    }else if(type == M){
+    } else if (type == M) {
       l = new Moment(mag * 1, pos, direction);
     }
     this.loads.push(l);
   }
 
-  static draw(){
+  static draw() {
     let canvasMidX = Canvas.midX;
     let canvasMidY = Canvas.midY;
 
@@ -69,15 +71,34 @@ class Beam {
   }
 
   // draw beam with pin supports and marks
-  static drawMarked(firstpin, lastpin = 8){
+  static drawMarked(firstpin, lastpin = 8, type) {
     Beam.draw();
     DLine.draw();
     new Mark(0);
     new Mark(Beam.width, Beam.len);
-    Beam.s1 = new PinSupport(firstpin);
-    Beam.s2 = new PinSupport(lastpin);
-    Beam.s1.draw();
-    Beam.s2.draw();
+    if (Beam.type == SS) {
+      Beam.s1 = new PinSupport(firstpin);
+      Beam.s2 = new PinSupport(lastpin);
+      Beam.s1.draw();
+      Beam.s2.draw();
+    }else {
+      Beam.updateType(type);
+    }
+  }
+
+  static updateType(type) {
+    Beam.beam_type = type;
+    let startX = Beam.beam_type == CLR ? Beam.endX : Beam.startX - 10;
+    let startY = Beam.startY - 30;
+    let endX = 10;
+    let endY = 80;
+
+    let ctx = Canvas.context;
+    ctx.beginPath();
+    ctx.save();
+    ctx.rect(startX, startY, endX, endY);
+    ctx.stroke();
+    ctx.restore();
   }
 
 }

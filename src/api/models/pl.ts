@@ -5,6 +5,7 @@ class PL implements ILoad {
     mag: number;
     pos: number;
     direction: string;
+    type = CONST.PL;
 
     constructor(mag: number, pos: number, direction: string) {
         this.mag = mag;

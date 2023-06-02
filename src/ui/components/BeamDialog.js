@@ -12,6 +12,8 @@ import {
   DialogActions,
 } from "@material-ui/core";
 import { DialogContext } from "../views/Home";
+import Select from "./Select";
+import { CLL, CLR, SS } from "../../../consts";
 
 const Lengthbar = ({ onClear }) => {
 
@@ -23,6 +25,7 @@ const Lengthbar = ({ onClear }) => {
     length: 8,
     s1: 0,
     s2: 8,
+    beam_type: SS,
   });
 
   const onChangeBeamLength = (value) => {
@@ -42,13 +45,14 @@ const Lengthbar = ({ onClear }) => {
       length,
       s1,
       s2,
+      beam_type
     } = state;
-
     onChangeBeamLength(length);
+    onClear();
+    Beam.type = beam_type;
     onChangeSupport1Length(s1);
     onChangeSupport2Length(s2);
-    onClear();
-    Beam.drawMarked(s1, s2);
+    Beam.drawMarked(s1, s2, beam_type);
     beamDialog.onToggle();
   }
 
@@ -64,6 +68,7 @@ const Lengthbar = ({ onClear }) => {
     s1,
     length,
     s2,
+    beam_type,
   } = state;
 
 
@@ -83,25 +88,50 @@ const Lengthbar = ({ onClear }) => {
             name="length"
 
           />
+          <Select
+            name="beam_type"
+            value={beam_type}
+            onChange={onChange}
+            options={
+              [
+                {
+                  value: SS,
+                  name: "Simply Supported",
+                },
+                {
+                  value: CLL,
+                  name: "Cantilever (Left)",
+                },
+                {
+                  value: CLR,
+                  name: "Cantilever (Right)",
+                },
+              ]
+            }
+          />
         </div>
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
-            <TextField
-              label="Support 1"
-              value={s1}
-              onChange={onChange}
-              name="s1"
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Support 2"
-              value={s2}
-              onChange={onChange}
-              name="s2"
-            />
-          </Grid>
-        </Grid>
+        {
+          beam_type === SS ?
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <TextField
+                  label="Support 1"
+                  value={s1}
+                  onChange={onChange}
+                  name="s1"
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  label="Support 2"
+                  value={s2}
+                  onChange={onChange}
+                  name="s2"
+                />
+              </Grid>
+            </Grid>
+            : null
+        }
       </DialogContent>
       <DialogActions>
         <Button onClick={beamDialog.onToggle} color="secondary">

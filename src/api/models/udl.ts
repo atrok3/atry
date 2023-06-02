@@ -1,9 +1,11 @@
 import PL from "./pl";
+import * as CONST from "../../../consts";
 
 class UDL extends PL {
     startPos: number
     endPos: number
     magPerPos: number
+    type = CONST.UDL
 
     constructor(magPerPos: number, startPos: number, endPos: number, direction: string) {
         let distance = endPos - startPos;

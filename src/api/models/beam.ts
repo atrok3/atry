@@ -1,6 +1,7 @@
 import * as CONST from "../../../consts";
 import ILoad from "./load";
 import Load from "./load";
+import Moment from "./moment";
 import PL from "./pl";
 import UDL from "./udl";
 
@@ -23,8 +24,9 @@ function makeTerm(left = "0", right) {
 class Beam {
     len: number
     loads: Load[] = []
-    A: PL
-    B: PL
+    A: ILoad
+    B: ILoad
+    type: string
 
     smeqn = {
         define: makeTerm("0", ""),
@@ -49,10 +51,19 @@ class Beam {
             supportPos1,
             supportPos2,
             length,
+            type,
         } = body;
         this.len = length;
-        this.A = new PL(0, supportPos1, "");
-        this.B = new PL(0, supportPos2, "");
+        if (type === CONST.SS) {
+            this.A = new PL(0, supportPos1, "");
+            this.B = new PL(0, supportPos2, "");
+        }else if(type === CONST.CLR){
+            this.A = new PL(0, length, "");
+            this.B = new Moment(0, length, "");
+        }else{
+            this.A = new PL(0, 0, "");
+            this.B = new Moment(0, 0, "");
+        }
         this.buildLoads(loads);
     }
 
@@ -75,7 +86,7 @@ class Beam {
                 t2,
                 t3,
                 neg,
-            } = load.calcMoment(point);
+            } = load.calcMoment(point);            
             Em += moment;
             this.smeqn.define.right += `${this.joinSign(i, neg)}${t1}`
             this.smeqn.letXb.right += `${this.joinSign(i, neg)}${t2}`

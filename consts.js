@@ -5,6 +5,9 @@ const ANTICLOCKWISE = "ANTICLOCKWISE";
 const PL = "PL";
 const UDL = "UDL";
 const M = "M";
+const SS = "SS";
+const CLR = "CLR";
+const CLL = "CLL";
 
 module.exports = {
     DOWN,
@@ -14,4 +17,7 @@ module.exports = {
     PL,
     UDL,
     M,
+    SS,
+    CLR,
+    CLL,
 }

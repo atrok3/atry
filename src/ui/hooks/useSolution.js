@@ -4,8 +4,9 @@ import Beam from "../classes/Beam";
 import DLine from "../classes/DLine";
 import PointLoad from "../classes/PointLoad";
 import { useLocation } from "react-router-dom";
-import { UDL as _UDL } from "../../../consts";
+import { M, UDL as _UDL } from "../../../consts";
 import UDL from "../classes/UDL";
+import Moment from "../classes/Moment";
 
 const useSolution = () => {
 
@@ -22,7 +23,10 @@ const useSolution = () => {
     loads.forEach((item, i) => {
       if(item.type == _UDL){
         new UDL(item.mag, item.startPos, item.pos, item.direction);
-      }else new PointLoad(item.mag * 1, item.pos, item.direction);
+      }else if(item.type == M){
+        new Moment(item.moment, item.pos, item.direction);
+      }
+      else new PointLoad(item.mag * 1, item.pos, item.direction);
     });
 
   }, [location.state]);

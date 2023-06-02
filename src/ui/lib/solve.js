@@ -3,7 +3,7 @@ import Beam from "../classes/Beam";
 export async function solve() {
     const supportPos1 = Beam.s1.textOffset;
     const supportPos2 = Beam.s2.textOffset;
-    let host = ""
+    let host = "http://localhost:3000";
     try {
         const res = await fetch(`${host}/api`, {
             method: "post",
@@ -11,7 +11,7 @@ export async function solve() {
                 "content-type": "application/json"
             },
             body: JSON.stringify({
-                type: 0,
+                type: Beam.type,
                 length: Beam.len,
                 loads: Beam.loads,
                 supportPos1,

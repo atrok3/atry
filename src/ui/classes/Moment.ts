@@ -39,10 +39,12 @@ class Moment extends ArrowHead {
 
         magnitude *= 1;
 
+        let isAntiClockwise = !this.isClockwise();
+
         var x = beamStartX + offset;
         var y = beamStartY - beamHeight; //this.isClockwise() ? beamEndY + beamHeight : beamStartY - beamHeight;
         var x1 = x;
-        var y1 = this.isClockwise() ? beamEndY : beamStartY;
+        var y1 = isAntiClockwise ? beamEndY : beamStartY;
 
         this.x = x;
         this.y = y;
@@ -52,10 +54,11 @@ class Moment extends ArrowHead {
 
         ctx.beginPath();
         //ctx.moveTo(x, y);
-        ctx.arc(x, y, 15,  1.5*Math.PI,0.5*Math.PI, this.isClockwise());
-        this.drawArrow(ctx, x - 15, y - 15, x, beamStartY)
+        ctx.arc(x, y + 30, 15,  1.5 * Math.PI, 0.5 * Math.PI, isAntiClockwise);
+        const arcX = isAntiClockwise ? x - 250 : x + 150;
+        this.drawArrow(ctx, arcX, y, x, y + 30 + 15)
 
-        var magnitudeTextY = y + 15;
+        var magnitudeTextY = y + 10;
         ctx.fillText(`${magnitude}`, x, magnitudeTextY);
         
         new Mark(offset, pos);

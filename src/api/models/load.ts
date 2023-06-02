@@ -1,9 +1,10 @@
 interface ILoad {
-    mag: number
+    mag?: number
+    moment?: number
     pos: number
     direction: string
     startPos?: number
-    type?: string
+    type: string
     /**
      * returns moment and equations terms
      * @param point point to find moment about
@@ -20,6 +21,8 @@ interface ILoad {
         t3: string
         neg: boolean
     }
+
+    calcDirection: () => void
 }
 
 export default ILoad;
