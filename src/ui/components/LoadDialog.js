@@ -62,10 +62,10 @@ const AddLoadDialog = () => {
                                 title: "Uniformly Distributed Load",
                                 onClick: uDLDialog.onToggle,
                             },
-                            /*{
+                            {
                                 title: "Moment Load",
                                 onClick: mLDialog.onToggle,
-                            }*/
+                            }
                         ].map((option, i) => (
                             <LoadItem
                                 key={i}

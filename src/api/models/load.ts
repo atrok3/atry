@@ -1,10 +1,14 @@
+import Beam from "./beam"
+
 interface ILoad {
     mag?: number
-    moment?: number
     pos: number
     direction: string
     startPos?: number
-    type: string
+    type?: string
+    label: string
+    moment?: number
+
     /**
      * returns moment and equations terms
      * @param point point to find moment about
@@ -14,7 +18,7 @@ interface ILoad {
      * @returns {number} t3 - equation term with distance from point solved
      * @returns {boolean} neg - sign of load magnitude. Magnitude defined in equation terms are absolute
      */
-    calcMoment: (point: number) => {
+    calcMoment: (point: number, beam: Beam) => {
         moment: number
         t1: string
         t2: string

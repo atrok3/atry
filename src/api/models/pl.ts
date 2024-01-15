@@ -1,19 +1,22 @@
 import * as CONST from "../../../consts";
+import Beam from "./beam";
 import ILoad from "./load";
 
 class PL implements ILoad {
     mag: number;
     pos: number;
     direction: string;
+    label: string;
     type = CONST.PL;
 
-    constructor(mag: number, pos: number, direction: string) {
+    constructor(mag: number, pos: number, direction: string, label: string) {
         this.mag = mag;
         this.pos = pos;
         this.direction = direction;
+        this.label = label;
     }
 
-    calcMoment(point: number) {
+    calcMoment(point: number, beam: Beam) {
         let mag = this.mag,
             pos = this.pos,
             direction = this.direction,
@@ -30,7 +33,7 @@ class PL implements ILoad {
 
         return {
             moment,
-            t1: `${mag}(Xb - ${pos})`,
+            t1: `${mag}(${beam.getBDistance()} - ${pos})`,
             t2: `${mag}(${point} - ${pos})`,
             t3: `${mag}(${distance})`,
             neg: _mag < 0,

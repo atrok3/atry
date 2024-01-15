@@ -12,6 +12,7 @@ import { ANTICLOCKWISE, CLOCKWISE, DOWN, M, UP } from "../../../consts";
 import Beam from "../classes/Beam";
 import { DialogContext } from "../views/Home";
 import Select from "./Select";
+import Moment from "../classes/Moment";
 
 const MomentDialog = ({ }) => {
 
@@ -28,7 +29,6 @@ const MomentDialog = ({ }) => {
 
   const magRef = React.createRef();
   const posRef = React.createRef();
-  const startPosRef = React.createRef();
   const [direction, setDirection] = useState(UP);
 
   const onChange = ({ target }) => {
@@ -39,7 +39,8 @@ const MomentDialog = ({ }) => {
 
     const mag = magRef.current.value;
     const pos = posRef.current.value;
-    Beam.addLoad({ mag, pos, direction }, M);
+    const l = new Moment(mag * 1, pos, direction);
+    Beam.addLoad(l);
     handleClose();
   }
 

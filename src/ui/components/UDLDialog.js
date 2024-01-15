@@ -12,6 +12,7 @@ import { DOWN, UP } from "../../../consts";
 import Beam from "../classes/Beam";
 import { DialogContext } from "../views/Home";
 import Select from "./Select";
+import UDL from "../classes/UDL";
 
 const UDLDialog = ({ }) => {
 
@@ -28,7 +29,7 @@ const UDLDialog = ({ }) => {
   const magRef = React.createRef();
   const posRef = React.createRef();
   const startPosRef = React.createRef();
-  const [direction, setDirection] = useState(UP);
+  const [direction, setDirection] = useState(DOWN);
 
   const onChange = ({ target }) => {
     setDirection(target.value);
@@ -39,7 +40,8 @@ const UDLDialog = ({ }) => {
     const mag = magRef.current.value;
     const pos = posRef.current.value;
     const startPos = startPosRef.current.value;
-    Beam.addLoad({ mag, pos, direction, startPos }, "UDL");
+    const l = new UDL(mag * 1, startPos * 1, pos * 1, direction);
+    Beam.addLoad(l);
     handleClose();
   }
 

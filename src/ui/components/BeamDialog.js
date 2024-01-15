@@ -47,11 +47,13 @@ const Lengthbar = ({ onClear }) => {
       s2,
       beam_type
     } = state;
-    onChangeBeamLength(length);
     onClear();
+    onChangeBeamLength(length);
     Beam.type = beam_type;
-    onChangeSupport1Length(s1);
-    onChangeSupport2Length(s2);
+    if (beam_type === SS) {
+      onChangeSupport1Length(s1);
+      onChangeSupport2Length(s2);
+    }
     Beam.drawMarked(s1, s2, beam_type);
     beamDialog.onToggle();
   }

@@ -8,6 +8,8 @@ const M = "M";
 const SS = "SS";
 const CLR = "CLR";
 const CLL = "CLL";
+const PS = "PS";
+const F = "F";
 
 module.exports = {
     DOWN,
@@ -20,4 +22,6 @@ module.exports = {
     SS,
     CLR,
     CLL,
+    PS,
+    F,
 }

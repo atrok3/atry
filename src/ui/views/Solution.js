@@ -20,7 +20,7 @@ function Solution() {
   return (
     <Page>
       <Backbar />
-      <Canvas
+      <Canvas 
         height={300}
       />
       <div>
@@ -29,14 +29,10 @@ function Solution() {
             eqn={sm}
             title="Finding A"
           />
-          {
-            sfeqn ?
-              <Working
-                eqn={sfeqn}
-                title="Finding B"
-              />
-            : null
-          }
+          <Working
+            eqn={sfeqn}
+            title="Finding B"
+          />
         </div>
       </div>
     </Page>

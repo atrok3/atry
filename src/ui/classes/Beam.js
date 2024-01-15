@@ -1,11 +1,11 @@
+import { SS, CLR } from "../../../consts";
 import Canvas from "./Canvas";
-import PointLoad from "./PointLoad";
 import DLine from "./DLine";
+import FixedSupport from "./FixedSupport";
 import PinSupport from "./PinSupport";
-import Mark from "./Mark";
-import { ANTICLOCKWISE, CLR, CLOCKWISE, DOWN, M, PL, SS, UDL } from "../../../consts";
 import _UDL from "./UDL";
-import Moment from "./Moment";
+
+const Labels = ["A", "B", "C", "D", "E", "F"];
 
 class Beam {
 
@@ -25,25 +25,9 @@ class Beam {
   static loads = [];
   static s1;
   static s2;
-
   static type = SS;
 
-  static addLoad(load, type) {
-    let l;
-    const {
-      mag,
-      pos,
-      direction
-    } = load;
-    if (type == PL) {
-      l = new PointLoad(mag * 1, pos * 1, direction);
-    } else if (type == UDL) {
-      l = new _UDL(mag * 1, load.startPos * 1, pos * 1, direction);
-    } else if (type == M) {
-      l = new Moment(mag * 1, pos, direction);
-    }
-    this.loads.push(l);
-  }
+  static labels = [];
 
   static draw() {
     let canvasMidX = Canvas.midX;
@@ -71,35 +55,87 @@ class Beam {
   }
 
   // draw beam with pin supports and marks
-  static drawMarked(firstpin, lastpin = 8, type) {
+  static drawMarked(firstpin, lastpin = 8, type = Beam.type) {
+    this.loads = [];
+    this.labels = [];
     Beam.draw();
     DLine.draw();
-    new Mark(0);
-    new Mark(Beam.width, Beam.len);
-    if (Beam.type == SS) {
-      Beam.s1 = new PinSupport(firstpin);
-      Beam.s2 = new PinSupport(lastpin);
-      Beam.s1.draw();
-      Beam.s2.draw();
-    }else {
-      Beam.updateType(type);
+    if (type == SS) {
+      const s1 = new PinSupport(firstpin);
+      const s2 = new PinSupport(lastpin);
+      Beam.s1 = s1; Beam.s2 = s2;
+      Beam.addLoad(s2, s1);
+    } else {
+      const s1 = new FixedSupport(Beam.type);
+      Beam.addLoad(s1);
     }
   }
 
-  static updateType(type) {
-    Beam.beam_type = type;
-    let startX = Beam.beam_type == CLR ? Beam.endX : Beam.startX - 10;
-    let startY = Beam.startY - 30;
-    let endX = 10;
-    let endY = 80;
 
-    let ctx = Canvas.context;
-    ctx.beginPath();
-    ctx.save();
-    ctx.rect(startX, startY, endX, endY);
-    ctx.stroke();
-    ctx.restore();
+  static getLoads() {
+    return Beam.loads;
   }
+
+  static setLoads(loads) {
+    Beam.loads = loads;
+  }
+
+  static setLabels(labels) {
+    Beam.labels = labels;
+  }
+
+  static addLoad(...load) {
+    const loads = Beam.loads;
+
+    loads.push(...load);
+
+    loads.sort((a, b) => a.pos - b.pos);
+
+    Canvas.context.clearRect(0, 0, Canvas.width, Canvas.height);
+    Beam.draw();
+    DLine.draw();
+
+    Beam.loads.forEach((load) => load.draw());
+    Beam.setLoads(loads);
+
+    Beam.labels.forEach((load, i) => {
+      const ctx = Canvas.context;
+      const startY = Canvas.midY;
+      let startX = (Beam.width * load) / Beam.len;
+      let labelOffset = +10;
+      if (i === 0) {
+        labelOffset = -10;
+      }
+
+      ctx.fillText(Labels[i], startX + labelOffset + Beam.startX, startY);
+      ctx.stroke();
+    })
+
+  }
+
+  static addLabel(pos) {
+    const labels = Beam.labels;
+    if (labels.includes(pos)) {
+      return Labels[labels.length - 1];
+    }
+
+    labels.push(pos);
+
+    labels.sort((a, b) => a - b);
+
+    return Labels[labels.length - 1];
+
+  }
+
+  static clear() {
+    Canvas.context.clearRect(0, 0, Canvas.width, Canvas.height);
+    Beam.len = 8;
+    Beam.loads = [];
+    Beam.labels = [];
+    Beam.draw();
+    DLine.draw();
+  }
+
 
 }
 

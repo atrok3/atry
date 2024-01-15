@@ -1,8 +1,6 @@
 import Beam from "../classes/Beam";
 
 export async function solve() {
-    const supportPos1 = Beam.s1.textOffset;
-    const supportPos2 = Beam.s2.textOffset;
     let host = "http://localhost:3000";
     try {
         const res = await fetch(`${host}/api`, {
@@ -13,16 +11,13 @@ export async function solve() {
             body: JSON.stringify({
                 type: Beam.type,
                 length: Beam.len,
-                loads: Beam.loads,
-                supportPos1,
-                supportPos2,
+                loads: Beam.loads
             })
         });
         if (res.ok) {
             const body = await res.json();
             return [
-                body.A,
-                body.B,
+                body.loads,
                 body.sfeqn,
                 body.smeqn,
             ]

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Canvas from "../classes/Canvas";
 import Beam from "../classes/Beam";
 import { useHistory } from "react-router-dom";
@@ -41,29 +41,22 @@ const useHome = () => {
 
   React.useEffect(() => {
     Canvas.initialize();
-    Beam.len = 8;
-    Beam.drawMarked(0, 8);
-    Beam.loads = [];
+    onClear();
   }, []);
 
   const onClear = () => {
-    Canvas.context.clearRect(0, 0, Canvas.width, Canvas.height);
-    //Beam.drawMarked(Beam.s1.textOffset, Beam.s2.textOffset);
-    Beam.loads = [];
+    Beam.clear();
+    Beam.drawMarked(0, 8);
   }
 
   const onSolve = async () => {
     dialogs.activityDialog.onToggle();
-    const [A, B, sfeqn, smeqn] = await solve();
+    const [loads, sfeqn, smeqn] = await solve();
     dialogs.activityDialog.onToggle();
     history.push({
       pathname: "/solution",
       state: {
-        loads: [
-          ...Beam.loads,
-          A,
-          B,
-        ],
+        loads,
         sfeqn,
         smeqn
       }

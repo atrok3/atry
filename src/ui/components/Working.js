@@ -21,8 +21,8 @@ const Working = ({ eqn, title, }) => {
                     {
                         Object.keys(eqn).map((item, i) => (
                             <li key={i} style={{ marginTop: i !== 0 ? 25 : 0 }}>
-                                <p style={{ margin: 0, marginBottom: 10}}>{`${eqn[item].title}`}</p>
-                                <p style={{ margin: 0 }}>{`${eqn[item].left} = ${eqn[item].right}`}</p>
+                                <p style={{ margin: 0, marginBottom: 10}} dangerouslySetInnerHTML={{ __html: `${eqn[item].title}` }}></p>
+                                <p style={{ margin: 0 }} dangerouslySetInnerHTML={{ __html: `${eqn[item].left} = ${eqn[item].right}` }}></p>
                             </li>
                         ))
                     }

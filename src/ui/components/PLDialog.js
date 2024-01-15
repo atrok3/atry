@@ -40,7 +40,9 @@ const PLDialog = ({ }) => {
 
     const mag = magRef.current.value;
     const pos = posRef.current.value;
-    Beam.addLoad({ mag, pos, direction }, "PL");
+    const l = new PointLoad(mag * 1, pos * 1, direction);
+
+    Beam.addLoad(l);
     handleClose();
   }
 

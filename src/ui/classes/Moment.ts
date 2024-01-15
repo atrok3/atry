@@ -24,20 +24,27 @@ class Moment extends ArrowHead {
         this.mag = magnitude;
         this.pos = pos;
 
+
+    }
+
+
+    draw(){
         const beamStartX = Beam.startX;
         const beamStartY = Beam.startY;
         const beamEndY = Beam.endY;
         const beamHeight = Beam.height;
-        this.direction = direction;
 
         const ctx: CanvasRenderingContext2D = Canvas.context;
+
+        const {
+            pos,
+            mag: magnitude,
+        } = this;
 
         let offset = pos * 1;
 
         // offset in pixels
         offset = (Beam.width * offset) / Beam.len;
-
-        magnitude *= 1;
 
         let isAntiClockwise = !this.isClockwise();
 
@@ -62,8 +69,7 @@ class Moment extends ArrowHead {
         ctx.fillText(`${magnitude}`, x, magnitudeTextY);
         
         new Mark(offset, pos);
-    }
-
+      }
 }
 
 export default Moment;

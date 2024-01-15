@@ -20,13 +20,17 @@ const useSolution = () => {
 
   React.useEffect(() => {
     const { loads } = location.state;
+    Beam.setLoads([]);
+    Beam.setLabels([]);
+
     loads.forEach((item, i) => {
+      let load;
       if(item.type == _UDL){
-        new UDL(item.mag, item.startPos, item.pos, item.direction);
+        load = new UDL(item.magPerPos, item.startPos, item.endPos, item.direction);
       }else if(item.type == M){
-        new Moment(item.moment, item.pos, item.direction);
-      }
-      else new PointLoad(item.mag * 1, item.pos, item.direction);
+        load = new Moment(item.moment, item.pos, item.direction);
+      }else load = new PointLoad(item.mag * 1, item.pos, item.direction);
+      Beam.addLoad(load);
     });
 
   }, [location.state]);

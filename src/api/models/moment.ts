@@ -6,16 +6,22 @@ class Moment implements ILoad {
     pos: number;
     direction: string;
     type = CONST.M;
+    startPos?: number;
+    label: string;
 
-    constructor(moment: number, pos: number, direction: string) {
+    constructor(moment: number, pos: number, direction: string, label: string) {
         this.moment = moment;
         this.pos = pos;
         this.direction = direction;
+        this.label = label;
     }
 
     calcMoment(point: number) {
 
-        const moment = this.moment;
+        let moment = this.moment;
+
+        if (this.direction == CONST.ANTICLOCKWISE /*&& pos > point*/) moment *= -1; // clockwise
+
 
         return {
             moment,

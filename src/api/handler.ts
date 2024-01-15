@@ -5,16 +5,14 @@ import PL from './models/pl';
 function handler(req, res) {
     const beam = new Beam(req.body);
     if (beam.type == SS) {
+        
         beam.findA();
         beam.findB();
-        res.send({
-            A: beam.A,
-            B: beam.B,
-            smeqn: beam.smeqn,
-            sfeqn: beam.sfeqn,
-        });
     } else if(beam.type === CLR) {
-        const moment = beam.findSumOfMoments();
+        let moment = beam.findSumOfMoments();
+
+        moment = parseFloat(moment.toFixed(2));
+
         beam.smeqn.define.right += ` - Mb`
 
         beam.smeqn.letXb.right += ` - Mb`
@@ -66,6 +64,8 @@ function handler(req, res) {
 
         aMag = (s + aMag);
 
+        parseFloat(aMag.toFixed(2))
+
         beam.A.mag = aMag * -1;
 
         beam.sfeqn.sumA.right = `${aMag} - A`;
@@ -75,21 +75,21 @@ function handler(req, res) {
 
         beam.A.calcDirection()
 
-        res.send({
-            A: beam.A,
-            B: beam.B,
-            smeqn: beam.smeqn,
-            sfeqn: beam.sfeqn,
-        });
     } else {
-        const moment = beam.findSumOfMoments();
-        beam.smeqn.define.right += ` - Ma`;
+        let moment = beam.findSumOfMoments();
 
-        beam.smeqn.letXb.right += ` - Ma`;
-        beam.smeqn.letXb.title = `Let Xb = ${beam.B.pos}`;
+        moment = parseFloat(moment.toFixed(2))
 
-        beam.smeqn.brackets.right += ` - Ma`;
-        beam.B.moment = moment;
+        const aLabel = beam.getALabel(true);
+        const bDistance = beam.getADistance();
+
+        beam.smeqn.define.right += ` - ${aLabel}`;
+
+        beam.smeqn.letXb.right += ` - ${aLabel}`;
+        beam.smeqn.letXb.title = `Let ${bDistance} = ${beam.A.pos}`;
+
+        beam.smeqn.brackets.right += ` - ${aLabel}`;
+        beam.A.moment = moment;
 
         let momentOfA1 = moment;
 
@@ -97,17 +97,17 @@ function handler(req, res) {
         //this.A.mag = (momentOfA1 / distance * -1);
         //this.A.calcDirection()
 
-        beam.smeqn.sumMs.right += `${momentOfA1} - Ma`;
+        beam.smeqn.sumMs.right += `${momentOfA1} - ${aLabel}`;
 
 
         beam.smeqn.moveA.right += `${momentOfA1}`;
-        beam.smeqn.moveA.left = `Ma`;
+        beam.smeqn.moveA.left = `${aLabel}`;
 
         //this.smeqn.final.title = `Divide both sides by ${distance}`
-        beam.smeqn.final.right = `${beam.B.moment}`;
-        beam.smeqn.final.left = "Ma";
+        beam.smeqn.final.right = `${beam.A.moment}`;
+        beam.smeqn.final.left = aLabel;
 
-        beam.B.calcDirection();
+        beam.A.calcDirection();
 
         let Ef = 0;
 
@@ -120,36 +120,40 @@ function handler(req, res) {
         });
 
         let s = Ef,
-            aMag = 0;
-            //bMag = 0;
+            aMag = 0,
+            bMag = 0;
 
-        beam.sfeqn.define.right += ` - A`;
+        const bLabel = beam.getBLabel();
 
-        beam.sfeqn.sumF.right = `${s} - A`;
+        beam.sfeqn.define.right += ` - ${bLabel}`;
 
-        beam.sfeqn.letA.right = `${s} - A`;
+        beam.sfeqn.sumF.right = `${s} - ${bLabel}`;
+
+        beam.sfeqn.letA.right = `${s} - ${bLabel}`;
         beam.sfeqn.letA.title = ``;
 
 
+        bMag = (s + aMag);
 
-        aMag = (s + aMag);
+        beam.B.mag = parseFloat(bMag.toFixed(2)) * -1;
 
-        beam.A.mag = aMag * -1;
+        beam.sfeqn.sumA.right = `${bMag} - ${bLabel}`;
 
-        beam.sfeqn.sumA.right = `${aMag} - A`;
+        beam.sfeqn.final.right = `${bMag}`
+        beam.sfeqn.final.left = `${bLabel}`
 
-        beam.sfeqn.final.right = `${aMag}`
-        beam.sfeqn.final.left = `A`
-
-        beam.A.calcDirection()
-
-        res.send({
-            A: beam.A,
-            B: beam.B,
-            smeqn: beam.smeqn,
-            sfeqn: beam.sfeqn,
-        });
+        beam.B.calcDirection()
     }
+
+    res.send({
+        loads: [
+            ...beam.loads,
+            beam.A,
+            beam.B,
+        ],
+        smeqn: beam.smeqn,
+        sfeqn: beam.sfeqn,
+    });
 }
 
 export default handler;
