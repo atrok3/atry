@@ -1,7 +1,7 @@
 import Beam from "../classes/Beam";
 
 export async function solve() {
-    let host = "http://localhost:3000";
+    let host = "https://atroit.onrender.com";
     try {
         const res = await fetch(`${host}/api`, {
             method: "post",
