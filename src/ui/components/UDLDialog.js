@@ -72,7 +72,7 @@ const UDLDialog = ({ }) => {
           fullWidth
         />
         <TextField
-          label="Distance"
+          label="Span"
           name="endPos"
           formik={formik}
           fullWidth

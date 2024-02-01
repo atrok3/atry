@@ -25,6 +25,7 @@ const Select = ({
                 name={name}
                 value={value}
                 onChange={onChange}
+                fullWidth
             >
                 {
                     options.map((option, i) => (

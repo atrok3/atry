@@ -65,12 +65,42 @@ class Beam {
         this.setLabels([]);
         Beam.draw();
         DLine.draw();
+        this.drawRef()
         if (type == SS) {
 
         } else {
             const s1 = new FixedSupport({ type: Beam.type });
             Beam.addLoad(s1);
         }
+    }
+
+
+    static drawRef() {
+        let fromPos = Beam.startX;
+        let toPos = Beam.endX;
+        let context = Canvas.context;
+
+        // left arrow
+        context.moveTo(fromPos, DLine.dLineStartY);
+        let _arrowhead = new ArrowHead()
+        _arrowhead
+            .drawArrow(context,
+                toPos,
+                DLine.dLineStartY,
+                fromPos,
+                DLine.dLineStartY
+            )
+        context.moveTo(toPos, DLine.dLineStartY);
+        let arrowhead = new ArrowHead()
+        arrowhead
+            .drawArrow(context,
+                fromPos,
+                DLine.dLineStartY,
+                toPos,
+                DLine.dLineStartY
+            )
+        new Mark(((toPos + fromPos) / 2), Beam.len)
+
     }
 
     static getBeamOptions(includeStart = true) {
@@ -125,33 +155,12 @@ class Beam {
         Canvas.context.clearRect(0, 0, Canvas.width, Canvas.height);
         Beam.draw();
         DLine.draw();
+        this.drawRef()
 
         Beam.loads.forEach(load => load.draw());
         Beam.setLoads(loads);
 
-        let fromPos = Beam.startX;
-        let toPos = Beam.endX;
 
-        // left arrow
-        context.moveTo(fromPos, DLine.dLineStartY);
-        let _arrowhead = new ArrowHead()
-        _arrowhead
-            .drawArrow(context,
-                toPos,
-                DLine.dLineStartY,
-                fromPos,
-                DLine.dLineStartY
-            )
-        context.moveTo(toPos, DLine.dLineStartY);
-        let arrowhead = new ArrowHead()
-        arrowhead
-            .drawArrow(context,
-                fromPos,
-                DLine.dLineStartY,
-                toPos,
-                DLine.dLineStartY
-            )
-        new Mark(((toPos + fromPos) / 2), Beam.len)
 
         loads.forEach((load) => {
             if (load.index === "beamstart") return;
