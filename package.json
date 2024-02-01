@@ -48,6 +48,7 @@
     "build:prod": "webpack --mode=production --node-env=production",
     "watch": "webpack --watch",
     "serve": "webpack serve",
-    "build:api": "yarn tsc -p tsconfig.api.json"
+    "build:api": "yarn tsc -p tsconfig.api.json",
+    "start": "node dist/src/api/index.js"
   }
 }
