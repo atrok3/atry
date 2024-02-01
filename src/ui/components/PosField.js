@@ -10,7 +10,7 @@ import TextField from "./TextField";
 const PosField = ({ formik }) => {
     return (
         <Grid container spacing={2}>
-            <Grid item xs={6}>
+            <Grid item md={6}>
                 <Select
                     fullWidth
                     options={Beam.getBeamOptions()}
@@ -18,9 +18,9 @@ const PosField = ({ formik }) => {
                     name="index"
                 />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item md={6}>
                 <TextField
-                    label="Position"
+                    label="Position From reference"
                     name="pos"
                     formik={formik}
                     fullWidth

@@ -66,16 +66,16 @@ class Beam {
         Beam.draw();
         DLine.draw();
         if (type == SS) {
-          
+
         } else {
             const s1 = new FixedSupport({ type: Beam.type });
             Beam.addLoad(s1);
         }
     }
 
-    static getBeamOptions(includeStart = true){
+    static getBeamOptions(includeStart = true) {
         let loads = [];
-        if(includeStart) loads.push({ name: "Beam start", value: "beamstart" });
+        if (includeStart) loads.push({ name: "Beam start", value: "beamstart" });
         loads = loads.concat(...Beam.loads.map((load, i) => ({ name: load.getName(), value: i })))
         return loads;
     }
@@ -129,6 +129,30 @@ class Beam {
         Beam.loads.forEach(load => load.draw());
         Beam.setLoads(loads);
 
+        let fromPos = Beam.startX;
+        let toPos = Beam.endX;
+
+        // left arrow
+        context.moveTo(fromPos, DLine.dLineStartY);
+        let _arrowhead = new ArrowHead()
+        _arrowhead
+            .drawArrow(context,
+                toPos,
+                DLine.dLineStartY,
+                fromPos,
+                DLine.dLineStartY
+            )
+        context.moveTo(toPos, DLine.dLineStartY);
+        let arrowhead = new ArrowHead()
+        arrowhead
+            .drawArrow(context,
+                fromPos,
+                DLine.dLineStartY,
+                toPos,
+                DLine.dLineStartY
+            )
+        new Mark(((toPos + fromPos) / 2), (load.startPos - loadIndex.pos))
+
         loads.forEach((load) => {
             if (load.index === "beamstart") return;
             if (load.index === "beamend") return;
@@ -136,7 +160,7 @@ class Beam {
             let loadIndex = this.getLoadByIndex(load.index);
             let fromPos = loadIndex.offset;
             let toPos = load.offset;
-            if(toPos - fromPos <= 0) return;
+            if (toPos - fromPos <= 0) return;
             if (load.type == CONST.UDL) {
                 // left arrow
                 context.moveTo(fromPos, DLine.dLineStartY);
@@ -161,7 +185,7 @@ class Beam {
 
             } else if (loadIndex.type == CONST.UDL) {
                 fromPos = loadIndex.endOffset;
-                if(toPos - fromPos <= 0) return;
+                if (toPos - fromPos <= 0) return;
                 // left arrow
                 context.moveTo(fromPos, DLine.dLineStartY);
                 let _arrowhead = new ArrowHead()
