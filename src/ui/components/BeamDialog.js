@@ -14,6 +14,7 @@ import {
 import { DialogContext } from "../views/Home";
 import Select from "./Select";
 import { CLL, CLR, SS } from "../../../consts";
+import { useFormik } from "formik";
 
 const Lengthbar = ({ onClear }) => {
 
@@ -46,13 +47,13 @@ const Lengthbar = ({ onClear }) => {
       s1,
       s2,
       beam_type
-    } = state;
+    } = formik.values;
     onClear();
     onChangeBeamLength(length);
     Beam.type = beam_type;
     if (beam_type === SS) {
-      onChangeSupport1Length(s1);
-      onChangeSupport2Length(s2);
+      //onChangeSupport1Length(s1);
+      //onChangeSupport2Length(s2);
     }
     Beam.drawMarked(s1, s2, beam_type);
     beamDialog.onToggle();
@@ -66,12 +67,12 @@ const Lengthbar = ({ onClear }) => {
     setState({ ...state, [name]: value });
   }
 
-  const {
-    s1,
-    length,
-    s2,
-    beam_type,
-  } = state;
+  const formik = useFormik({
+    initialValues: {
+      length: 8,
+      beam_type: SS
+    }
+  })
 
 
   return (
@@ -85,15 +86,13 @@ const Lengthbar = ({ onClear }) => {
         <div>
           <TextField
             label="Beam Length"
-            value={length}
-            onChange={onChange}
             name="length"
+            formik={formik}
 
           />
           <Select
+            formik={formik}
             name="beam_type"
-            value={beam_type}
-            onChange={onChange}
             options={
               [
                 {
@@ -112,28 +111,6 @@ const Lengthbar = ({ onClear }) => {
             }
           />
         </div>
-        {
-          beam_type === SS ?
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <TextField
-                  label="Support 1"
-                  value={s1}
-                  onChange={onChange}
-                  name="s1"
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  label="Support 2"
-                  value={s2}
-                  onChange={onChange}
-                  name="s2"
-                />
-              </Grid>
-            </Grid>
-            : null
-        }
       </DialogContent>
       <DialogActions>
         <Button onClick={beamDialog.onToggle} color="secondary">

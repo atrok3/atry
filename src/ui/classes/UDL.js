@@ -3,8 +3,11 @@ import Mark from "./Mark";
 import { UDL as TYPE } from "../../../consts";
 import Arrow from "./Arrow";
 import Beam from "./Beam";
+import DLine from "./DLine";
+import ArrowHead from "./ArrowHead";
+import Load from "./Load";
 
-class UDL {
+class UDL extends Load {
 
     mag;
     pos;
@@ -12,14 +15,26 @@ class UDL {
     type = TYPE;
     endLabel;
     label;
+    index;
+    relativePos;
+    aPos;
 
-    constructor(magnitude, startPos, pos, direction) {
+    name = "Uniformly Distributed Load"
+
+    constructor({ mag, startPos, pos, direction, index }) {
+        super();
+        let _startPos = Beam.getAbsolutePosition({ pos: startPos, index })
+        let _pos = _startPos + pos;
         this.direction = direction;
-        this.mag = magnitude;
-        this.pos = pos;
-        this.startPos = startPos;
+        this.mag = mag;
+        this.pos = _pos;
+        this.startPos = _startPos;
         this.label = Beam.addLabel(this.startPos);
         this.endLabel = Beam.addLabel(this.pos);
+        this.index = index;
+        this.relativePos = startPos;
+        this.relativeEndPos = pos;
+        this.aPos = _startPos;
     }
 
     draw() {
@@ -44,8 +59,35 @@ class UDL {
         ctx.lineTo(t.x, y);
         var magnitudeTextY = f.isUp() ? y + 15 : y - 5;
         ctx.fillText(`${magnitude}`, s.x, magnitudeTextY);
-        new Mark(offset, startPos);
-        new Mark(t.offset, pos);
+        this.offset = offset;
+        this.endOffset = t.offset;
+        ctx.stroke()
+        let fromPos = f.offset;
+        let toPos = t.offset;
+        ctx.moveTo(toPos, DLine.dLineStartY);
+        let arrowhead = new ArrowHead()
+        arrowhead
+            .drawArrow(ctx,
+                fromPos,
+                DLine.dLineStartY,
+                toPos,
+                DLine.dLineStartY
+            )
+
+        ctx.moveTo(fromPos, DLine.dLineStartY);
+        let arrowhead2 = new ArrowHead()
+        arrowhead2
+            .drawArrow(ctx,
+                toPos,
+                DLine.dLineStartY,
+                fromPos,
+                DLine.dLineStartY
+            )
+        new Mark(((toPos + fromPos) / 2), (pos - startPos))
+
+
+        //new Mark(offset - Beam.startX, startPos);
+        //new Mark(t.offset - Beam.startX, pos);
         // lines can't be drawn after mark
     }
 

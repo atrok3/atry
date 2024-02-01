@@ -39,7 +39,7 @@ const MomentDialog = ({ }) => {
 
     const mag = magRef.current.value;
     const pos = posRef.current.value;
-    const l = new Moment(mag * 1, pos, direction);
+    const l = new Moment({ mag, pos, direction });
     Beam.addLoad(l);
     handleClose();
   }

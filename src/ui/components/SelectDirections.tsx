@@ -9,13 +9,24 @@ export interface SelectDirections {
 
 
 const SelectDirections = ({
-    direction,
-    onChange,
+    ...others
 }) => {
+
+    let name = "direction";
+
+    const {
+        formik
+    } = others;
+
+    let onChange = formik.handleChange;
+
+    let value = formik.values[name]
+
+
     return (
         <Select
-            value={direction}
-            onChange={onChange}
+            name={name}
+            formik={formik}
             options={
                 [
                     {

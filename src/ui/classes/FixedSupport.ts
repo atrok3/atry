@@ -2,8 +2,9 @@ import Canvas from "./Canvas";
 import Beam from "./Beam";
 import Mark from "./Mark";
 import { CLR, PS, F, CLL } from "../../../consts";
+import Load from "./Load";
 
-class FixedSupport {
+class FixedSupport extends Load {
 
   x; 
   y; 
@@ -14,12 +15,22 @@ class FixedSupport {
 
   pos = 0; // readable/ real value
   label;
+  index;
+  name = "Fixed Support";
+  relativePos;
+  aPos;
 
-  constructor(type){    
-    this.pos = type == CLL ? 0 : Beam.len;
+  constructor({ type }){
+    super();    
+    let index  = type == CLL ? "beamstart"  : "beamend";
+    let pos = type == CLL ? 0 : Beam.len;
+    this.pos = pos;
+    let _pos = pos;
+    this.offset = Beam.getRatioPosition(_pos);
     this.label = Beam.addLabel(this.pos);
-    console.log(this.label);
-    
+    this.index = index;
+    this.relativePos = pos;
+    this.aPos = _pos;
   }
 
   draw(){

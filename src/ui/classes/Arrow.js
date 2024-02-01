@@ -19,20 +19,16 @@ class Arrow extends ArrowHead {
     constructor(mag, pos, direction) {
         super();
         const ctx = Canvas.context;
-        const beamStartX = Beam.startX;
         const beamStartY = Beam.startY;
         const beamEndY = Beam.endY;
         const beamHeight = Beam.height;
         this.direction = direction;
 
-        let offset = pos * 1;
-
-        // offset in pixels
-        offset = (Beam.width * offset) / Beam.len;
+        let offset = Beam.getRatioPosition(pos);
 
         mag *= 1;
 
-        var x = beamStartX + offset;
+        var x = offset;
         var y = this.isUp() ? beamEndY + beamHeight : beamStartY - beamHeight;
         var x1 = x;
         var y1 = this.isUp() ? beamEndY : beamStartY;

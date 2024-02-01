@@ -5,47 +5,44 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  FormControl,
+  InputLabel,
 } from "@material-ui/core";
 import PointLoad from "../classes/PointLoad";
 import TextField from "./TextField";
 import { DOWN, UP } from "../../../consts";
 import Beam from "../classes/Beam";
 import { DialogContext } from "../views/Home";
-import Select from "./Select";
-import UDL from "../classes/UDL";
-import PosField from "./PosField";
-import { useFormik } from "formik";
 import SelectDirections from "./SelectDirections";
+import PinSupport from "../classes/PinSupport";
+import { useFormik } from "formik";
+import PosField from "./PosField";
 
-const UDLDialog = ({ }) => {
+const PSDialog = ({ }) => {
 
 
   const {
-    uDLDialog
+    pSDialog
   } = useContext(DialogContext);
 
   const {
     open,
     onToggle: handleClose,
-  } = uDLDialog;
+  } = pSDialog;
 
   const formik = useFormik({
     initialValues: {
-      mag: 0,
-      direction: DOWN,
       pos: 0,
-      startPos: 0,
       index: "beamstart",
     }
   });
 
+
   const handleAddLoad = () => {
 
-    let op = { ...formik.values };
+    const ps = new PinSupport({ ...formik.values });
 
-    const l = new UDL({ ...op, startPos: formik.values.pos, pos: formik.values.endPos });
-
-    Beam.addLoad(l);
+    Beam.addLoad(ps);
     handleClose();
   }
 
@@ -57,25 +54,8 @@ const UDLDialog = ({ }) => {
     >
       <DialogTitle>Add Load</DialogTitle>
       <DialogContent>
-        <TextField
-          label="Magnitude"
-          name="mag"
-          formik={formik}
-          fullWidth
-        />
-        <SelectDirections
-          formik={formik}
-        />
         <PosField
-          label="Start Position"
           formik={formik}
-          fullWidth
-        />
-        <TextField
-          label="Distance"
-          name="endPos"
-          formik={formik}
-          fullWidth
         />
       </DialogContent>
       <DialogActions>
@@ -90,4 +70,4 @@ const UDLDialog = ({ }) => {
   )
 }
 
-export default UDLDialog;
+export default PSDialog;

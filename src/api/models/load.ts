@@ -8,6 +8,10 @@ interface ILoad {
     type?: string
     label: string
     moment?: number
+    index: any
+    relativePos: number
+    aPos: number
+    relativeEndPos?: number
 
     /**
      * returns moment and equations terms

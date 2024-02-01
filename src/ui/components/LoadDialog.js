@@ -41,6 +41,7 @@ const AddLoadDialog = () => {
         pLDialog,
         uDLDialog,
         mLDialog,
+        pSDialog,
     } = useContext(DialogContext);
 
     return (
@@ -54,6 +55,10 @@ const AddLoadDialog = () => {
                 <List>
                     {
                         [
+                            {
+                                title: "Pin Support",
+                                onClick: pSDialog.onToggle,
+                            },
                             {
                                 title: "Point Load",
                                 onClick: pLDialog.onToggle,

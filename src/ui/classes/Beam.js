@@ -1,140 +1,252 @@
-import { SS, CLR } from "../../../consts";
+import CONST, { SS, CLR, DOWN } from "../../../consts";
+import ArrowHead from "./ArrowHead";
 import Canvas from "./Canvas";
 import DLine from "./DLine";
 import FixedSupport from "./FixedSupport";
+import Mark from "./Mark";
+import Moment from "./Moment";
 import PinSupport from "./PinSupport";
+import PointLoad from "./PointLoad";
+import UDL from "./UDL";
 import _UDL from "./UDL";
 
 const Labels = ["A", "B", "C", "D", "E", "F"];
 
 class Beam {
 
-  // width in pixels
-  static width = 200;
-  static len = 8; // used for calculations readable/ real value
-  static height = 20;
+    // width in pixels
+    static width = 200;
+    static len = 8; // used for calculations readable/ real value
+    static height = 20;
 
-  static halfWidth = this.width / 2;
-  static halfHeight = this.height / 2;
+    static halfWidth = this.width / 2;
+    static halfHeight = this.height / 2;
 
-  static startX;
-  static startY;
-  static endX;
-  static endY;
+    static startX;
+    static startY;
+    static endX;
+    static endY;
 
-  static loads = [];
-  static s1;
-  static s2;
-  static type = SS;
+    static loads = [];
+    static s1;
+    static s2;
+    static type = SS;
 
-  static labels = [];
+    static labels = [];
 
-  static draw() {
-    let canvasMidX = Canvas.midX;
-    let canvasMidY = Canvas.midY;
+    static draw() {
+        let canvasMidX = Canvas.midX;
+        let canvasMidY = Canvas.midY;
 
-    let startX = canvasMidX - this.halfWidth;
-    let startY = canvasMidY - this.halfHeight;
-    let endX = canvasMidX + this.halfWidth;
-    let endY = canvasMidY + this.halfHeight;
+        let startX = canvasMidX - this.halfWidth;
+        let startY = canvasMidY - this.halfHeight;
+        let endX = canvasMidX + this.halfWidth;
+        let endY = canvasMidY + this.halfHeight;
 
-    this.startX = startX;
-    this.startY = startY;
-    this.endX = endX;
-    this.endY = endY;
+        this.startX = startX;
+        this.startY = startY;
+        this.endX = endX;
+        this.endY = endY;
 
-    let ctx = Canvas.context;
-    ctx.beginPath();
-    ctx.save();
-    ctx.fillStyle = "#bbb";
-    ctx.fillRect(startX, startY, this.width, this.height);
-    ctx.rect(startX, startY, this.width, this.height);
-    ctx.stroke();
-    ctx.restore();
+        let ctx = Canvas.context;
+        ctx.beginPath();
+        ctx.save();
+        ctx.fillStyle = "#bbb";
+        ctx.fillRect(startX, startY, this.width, this.height);
+        ctx.rect(startX, startY, this.width, this.height);
+        ctx.stroke();
+        ctx.restore();
 
-  }
-
-  // draw beam with pin supports and marks
-  static drawMarked(firstpin, lastpin = 8, type = Beam.type) {
-    this.loads = [];
-    this.labels = [];
-    Beam.draw();
-    DLine.draw();
-    if (type == SS) {
-      const s1 = new PinSupport(firstpin);
-      const s2 = new PinSupport(lastpin);
-      Beam.s1 = s1; Beam.s2 = s2;
-      Beam.addLoad(s2, s1);
-    } else {
-      const s1 = new FixedSupport(Beam.type);
-      Beam.addLoad(s1);
-    }
-  }
-
-
-  static getLoads() {
-    return Beam.loads;
-  }
-
-  static setLoads(loads) {
-    Beam.loads = loads;
-  }
-
-  static setLabels(labels) {
-    Beam.labels = labels;
-  }
-
-  static addLoad(...load) {
-    const loads = Beam.loads;
-
-    loads.push(...load);
-
-    loads.sort((a, b) => a.pos - b.pos);
-
-    Canvas.context.clearRect(0, 0, Canvas.width, Canvas.height);
-    Beam.draw();
-    DLine.draw();
-
-    Beam.loads.forEach((load) => load.draw());
-    Beam.setLoads(loads);
-
-    Beam.labels.forEach((load, i) => {
-      const ctx = Canvas.context;
-      const startY = Canvas.midY;
-      let startX = (Beam.width * load) / Beam.len;
-      let labelOffset = +10;
-      if (i === 0) {
-        labelOffset = -10;
-      }
-
-      ctx.fillText(Labels[i], startX + labelOffset + Beam.startX, startY);
-      ctx.stroke();
-    })
-
-  }
-
-  static addLabel(pos) {
-    const labels = Beam.labels;
-    if (labels.includes(pos)) {
-      return Labels[labels.length - 1];
     }
 
-    labels.push(pos);
+    // draw beam and marks
+    static drawMarked(firstpin = 0, lastpin = 2, type = Beam.type) {
+        this.setLoads([]);
+        this.setLabels([]);
+        Beam.draw();
+        DLine.draw();
+        if (type == SS) {
+          
+        } else {
+            const s1 = new FixedSupport({ type: Beam.type });
+            Beam.addLoad(s1);
+        }
+    }
 
-    labels.sort((a, b) => a - b);
+    static getBeamOptions(includeStart = true){
+        let loads = [];
+        if(includeStart) loads.push({ name: "Beam start", value: "beamstart" });
+        loads = loads.concat(...Beam.loads.map((load, i) => ({ name: load.getName(), value: i })))
+        return loads;
+    }
 
-    return Labels[labels.length - 1];
+    static getRatioPosition(pos) {
+        pos *= 1;
+        // offset in pixels
+        let offset = (Beam.width * pos) / Beam.len;
+        return offset + this.startX;
+    }
 
-  }
+    static getAbsolutePosition({ index, pos }) {
+        if (index !== "beamstart" && index !== "beamend") {
+            pos += Beam.getLoadByIndex(index).pos;
+        }
+        return pos;
+    }
 
-  static clear() {
-    Canvas.context.clearRect(0, 0, Canvas.width, Canvas.height);
-    Beam.len = 8;
-    Beam.loads = [];
-    Beam.labels = [];
-    Beam.draw();
-    DLine.draw();
-  }
+    static getLoadByIndex(index) {
+        return Beam.getLoads()[index];
+    }
+
+    static getLoads() {
+        return Beam.loads;
+    }
+
+    static setLoads(loads) {
+        Beam.loads = loads;
+    }
+
+    static getLabels() {
+        return Beam.labels;
+    }
+
+    static setLabels(labels) {
+        Beam.labels = labels;
+    }
+
+    static addLoad(...load) {
+        let context = Canvas.context;
+        const loads = Beam.getLoads();
+
+        loads.push(...load);
+
+        loads.sort((a, b) => a.pos - b.pos);
+
+        Canvas.context.clearRect(0, 0, Canvas.width, Canvas.height);
+        Beam.draw();
+        DLine.draw();
+
+        Beam.loads.forEach(load => load.draw());
+        Beam.setLoads(loads);
+
+        loads.forEach((load) => {
+            if (load.index === "beamstart") return;
+            if (load.index === "beamend") return;
+
+            let loadIndex = this.getLoadByIndex(load.index);
+            let fromPos = loadIndex.offset;
+            let toPos = load.offset;
+            if(toPos - fromPos <= 0) return;
+            if (load.type == CONST.UDL) {
+                // left arrow
+                context.moveTo(fromPos, DLine.dLineStartY);
+                let _arrowhead = new ArrowHead()
+                _arrowhead
+                    .drawArrow(context,
+                        toPos,
+                        DLine.dLineStartY,
+                        fromPos,
+                        DLine.dLineStartY
+                    )
+                context.moveTo(toPos, DLine.dLineStartY);
+                let arrowhead = new ArrowHead()
+                arrowhead
+                    .drawArrow(context,
+                        fromPos,
+                        DLine.dLineStartY,
+                        toPos,
+                        DLine.dLineStartY
+                    )
+                new Mark(((toPos + fromPos) / 2), (load.startPos - loadIndex.pos))
+
+            } else if (loadIndex.type == CONST.UDL) {
+                fromPos = loadIndex.endOffset;
+                if(toPos - fromPos <= 0) return;
+                // left arrow
+                context.moveTo(fromPos, DLine.dLineStartY);
+                let _arrowhead = new ArrowHead()
+                _arrowhead
+                    .drawArrow(context,
+                        toPos,
+                        DLine.dLineStartY,
+                        fromPos,
+                        DLine.dLineStartY
+                    )
+                context.moveTo(toPos, DLine.dLineStartY);
+                let arrowhead = new ArrowHead()
+                arrowhead
+                    .drawArrow(context,
+                        fromPos,
+                        DLine.dLineStartY,
+                        toPos,
+                        DLine.dLineStartY
+                    )
+                new Mark(((toPos + fromPos) / 2), Math.abs((load.pos - loadIndex.pos)))
+
+
+            } else {
+                // left arrow
+                context.moveTo(fromPos, DLine.dLineStartY);
+                let _arrowhead = new ArrowHead()
+                _arrowhead
+                    .drawArrow(context,
+                        toPos,
+                        DLine.dLineStartY,
+                        fromPos,
+                        DLine.dLineStartY
+                    )
+                context.moveTo(toPos, DLine.dLineStartY);
+                let arrowhead = new ArrowHead()
+                arrowhead
+                    .drawArrow(context,
+                        fromPos,
+                        DLine.dLineStartY,
+                        toPos,
+                        DLine.dLineStartY
+                    )
+
+                new Mark(((toPos + fromPos) / 2), (load.pos - loadIndex.pos))
+            }
+
+        });
+
+        Beam.labels.forEach((load, i) => {
+            const ctx = Canvas.context;
+            const startY = Canvas.midY;
+            let startX = (Beam.width * load) / Beam.len;
+            let labelOffset = +10;
+            if (i === 0) {
+                labelOffset = -10;
+            }
+
+            ctx.fillText(Labels[i], startX + labelOffset + Beam.startX, startY);
+            ctx.stroke();
+        })
+
+    }
+
+    static addLabel(pos) {
+        const labels = Beam.getLabels();
+        if (labels.includes(pos)) {
+            return Labels[labels.length - 1];
+        }
+
+        labels.push(pos);
+
+        labels.sort((a, b) => a - b);
+
+        return Labels[labels.length - 1];
+
+    }
+
+    static clear() {
+        Canvas.context.clearRect(0, 0, Canvas.width, Canvas.height);
+        Beam.len = 8;
+        Beam.setLoads([]);
+        Beam.setLabels([]);
+        Beam.draw();
+        DLine.draw();
+    }
 
 
 }

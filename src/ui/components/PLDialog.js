@@ -7,6 +7,7 @@ import {
   DialogActions,
   FormControl,
   InputLabel,
+  Grid,
 } from "@material-ui/core";
 import PointLoad from "../classes/PointLoad";
 import TextField from "./TextField";
@@ -14,6 +15,9 @@ import { DOWN, UP } from "../../../consts";
 import Beam from "../classes/Beam";
 import { DialogContext } from "../views/Home";
 import SelectDirections from "./SelectDirections";
+import Select from "./Select";
+import { useFormik } from "formik";
+import PosField from "./PosField";
 
 
 const PLDialog = ({ }) => {
@@ -28,19 +32,18 @@ const PLDialog = ({ }) => {
     onToggle: handleClose,
   } = pLDialog;
 
-  const magRef = React.createRef();
-  const posRef = React.createRef();
-  const [direction, setDirection] = useState(DOWN);
-
-  const onChange = ({ target }) => {
-    setDirection(target.value);
-  }
+  const formik = useFormik({
+    initialValues: {
+      mag: 0,
+      direction: DOWN,
+      pos: 0,
+      index: "beamstart",
+    }
+  });
 
   const handleAddLoad = () => {
 
-    const mag = magRef.current.value;
-    const pos = posRef.current.value;
-    const l = new PointLoad(mag * 1, pos * 1, direction);
+    const l = new PointLoad({ ...formik.values });
 
     Beam.addLoad(l);
     handleClose();
@@ -55,18 +58,16 @@ const PLDialog = ({ }) => {
       <DialogTitle>Add Load</DialogTitle>
       <DialogContent>
         <TextField
+          formik={formik}
           label="Magnitude"
-          inputRef={magRef}
+          name="mag"
           fullWidth
         />
         <SelectDirections
-          direction={direction}
-          onChange={onChange}
+          formik={formik}
         />
-        <TextField
-          label="Position"
-          inputRef={posRef}
-          fullWidth
+        <PosField
+          formik={formik}
         />
       </DialogContent>
       <DialogActions>

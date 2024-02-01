@@ -8,21 +8,41 @@ class PL implements ILoad {
     direction: string;
     label: string;
     type = CONST.PL;
+    index: any;
+    relativePos: number
+    aPos: number;
 
-    constructor(mag: number, pos: number, direction: string, label: string) {
+    constructor({
+        mag,
+        pos,
+        direction,
+        label,
+        index,
+        relativePos,
+        aPos,
+    }:
+        Partial<ILoad>
+    ) {
         this.mag = mag;
         this.pos = pos;
         this.direction = direction;
         this.label = label;
+        this.index = index;
+        this.relativePos = relativePos;
+        this.aPos = aPos;
     }
 
     calcMoment(point: number, beam: Beam) {
         let mag = this.mag,
             pos = this.pos,
+            index = this.index,
             direction = this.direction,
             moment = 0,
-            _mag = mag,
-            distance = point - pos;
+            _mag = mag;
+
+        pos = beam.getAbsolutePos(this);
+
+        let distance = point - pos;
 
         // if it's down -
         if (direction == CONST.DOWN /*&& pos > point*/) _mag *= -1; // clockwise
@@ -43,8 +63,8 @@ class PL implements ILoad {
     /**
      * sets direction of load using magnitude sign
      */
-    calcDirection(){
-        this.direction = this.mag > 0 ? CONST.UP : CONST.DOWN 
+    calcDirection() {
+        this.direction = this.mag > 0 ? CONST.UP : CONST.DOWN
     }
 
 }

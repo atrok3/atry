@@ -6,11 +6,15 @@ import {
 } from "@material-ui/core";
 
 const Select = ({
-    value,
-    onChange,
     options,
     name,
+    formik,
 }) => {
+
+    let onChange = formik.handleChange;
+
+    let value = formik.values[name];
+
     return (
         <FormControl
             variant="outlined"

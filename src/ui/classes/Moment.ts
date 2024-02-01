@@ -13,23 +13,28 @@ class Moment extends ArrowHead {
     x
     y
     offset
+    index;
+    relativePos;
+    aPos;
 
     isClockwise() {
         return this.direction == CLOCKWISE
     }
 
-    constructor(magnitude, pos, direction) {
+    constructor({ mag, pos, direction, index }) {
         super();
+        let _pos = Beam.getAbsolutePosition({ pos, index })
         this.direction = direction;
-        this.mag = magnitude;
-        this.pos = pos;
-
-
+        this.mag = mag;
+        this.pos = _pos;
+        this.index = index;
+        this.offset = Beam.getRatioPosition(_pos);
+        this.relativePos = pos;
+        this.aPos = _pos;
     }
 
 
     draw(){
-        const beamStartX = Beam.startX;
         const beamStartY = Beam.startY;
         const beamEndY = Beam.endY;
         const beamHeight = Beam.height;
@@ -39,16 +44,13 @@ class Moment extends ArrowHead {
         const {
             pos,
             mag: magnitude,
+            offset
         } = this;
 
-        let offset = pos * 1;
-
-        // offset in pixels
-        offset = (Beam.width * offset) / Beam.len;
 
         let isAntiClockwise = !this.isClockwise();
 
-        var x = beamStartX + offset;
+        var x = offset;
         var y = beamStartY - beamHeight; //this.isClockwise() ? beamEndY + beamHeight : beamStartY - beamHeight;
         var x1 = x;
         var y1 = isAntiClockwise ? beamEndY : beamStartY;
@@ -57,7 +59,6 @@ class Moment extends ArrowHead {
         this.y = y;
         //this.x1 = x1;
         //this.y1 = y1;
-        this.offset = offset;
 
         ctx.beginPath();
         //ctx.moveTo(x, y);
@@ -68,7 +69,7 @@ class Moment extends ArrowHead {
         var magnitudeTextY = y + 10;
         ctx.fillText(`${magnitude}`, x, magnitudeTextY);
         
-        new Mark(offset, pos);
+        new Mark(offset - Beam.startX, pos);
       }
 }
 

@@ -9,16 +9,16 @@ class Mark {
     let marks = Mark.marks;
     let ctx = Canvas.context;
     const markTextOffset = Canvas.midY + DLine.offsetY + 10;
-    const markStartX = Beam.startX + markOffset;
+    const markStartX = markOffset;
     const markStartY = Beam.startY + DLine.offsetY - 5;
     const markEndY = markStartY + 10;
     ctx.moveTo(markStartX, markStartY);
-    ctx.lineTo(markStartX, markEndY);
-    ctx.stroke();
+    //ctx.lineTo(markStartX, markEndY);
+    //ctx.stroke();
     ctx.textAlign = "center";
     ctx.fillText(text || markOffset, markStartX, markTextOffset);
     ctx.stroke();
-    marks.push(markOffset);
+    //marks.push(markOffset);
   }
 }
 

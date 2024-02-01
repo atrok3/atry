@@ -8,12 +8,28 @@ class Moment implements ILoad {
     type = CONST.M;
     startPos?: number;
     label: string;
+    index: any
+    relativePos: number;
+    aPos: number;
 
-    constructor(moment: number, pos: number, direction: string, label: string) {
+    constructor({
+        moment,
+        pos,
+        direction,
+        label,
+        index,
+        relativePos,
+        aPos
+    }:
+        Partial<ILoad>
+    ) {
         this.moment = moment;
         this.pos = pos;
         this.direction = direction;
         this.label = label;
+        this.index = index;
+        this.relativePos = relativePos;
+        this.aPos = aPos;
     }
 
     calcMoment(point: number) {
@@ -35,8 +51,8 @@ class Moment implements ILoad {
     /**
      * sets direction of load using magnitude sign
      */
-    calcDirection(){
-        this.direction = this.moment > 0 ? CONST.ANTICLOCKWISE : CONST.CLOCKWISE 
+    calcDirection() {
+        this.direction = this.moment > 0 ? CONST.ANTICLOCKWISE : CONST.CLOCKWISE
     }
 
 }

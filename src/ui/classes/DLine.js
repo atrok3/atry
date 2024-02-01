@@ -10,6 +10,8 @@ class DLine {
     const dLineStartX = Beam.startX;
     const dLineStartY = Beam.startY + this.offsetY;
     const dLineEndX = Beam.endX;
+    
+    this.dLineStartY = dLineStartY;
 
     ctx.beginPath();
     ctx.moveTo(dLineStartX, dLineStartY);

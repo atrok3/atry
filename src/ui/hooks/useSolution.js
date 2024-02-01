@@ -14,6 +14,7 @@ const useSolution = () => {
 
   React.useEffect(() => {
     Canvas.initialize();
+    console.log(Beam.len);
     Beam.draw();
     DLine.draw();
   }, []);
@@ -25,11 +26,33 @@ const useSolution = () => {
 
     loads.forEach((item, i) => {
       let load;
+      let {
+        index,
+        direction,
+        pos,
+        mag,
+      } = item;
       if(item.type == _UDL){
-        load = new UDL(item.magPerPos, item.startPos, item.endPos, item.direction);
+        load = new UDL({ 
+          mag: item.magPerPos, 
+          startPos: item.startPos, 
+          pos: item.endPos, 
+          direction,
+          index,
+      });
       }else if(item.type == M){
-        load = new Moment(item.moment, item.pos, item.direction);
-      }else load = new PointLoad(item.mag * 1, item.pos, item.direction);
+        load = new Moment({ 
+            mag: item.moment, 
+            pos, 
+            direction,
+            index, 
+          });
+      }else load = new PointLoad({
+        mag, 
+        pos, 
+        direction,
+        index,
+      });
       Beam.addLoad(load);
     });
 

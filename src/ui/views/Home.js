@@ -12,6 +12,7 @@ import ActivityDialog from "../components/ActivityDialog";
 import Page from "../components/Page";
 import Canvas from "../components/Canvas";
 import MomentDialog from "../components/MomentDialog";
+import PSDialog from "../components/PSDialog";
 
 export const DialogContext = createContext();
 
@@ -51,6 +52,7 @@ function App() {
           <UDLDialog />
           <ActivityDialog />
           <MomentDialog />
+          <PSDialog />
         </div>
       </Page>
     </DialogContext.Provider>

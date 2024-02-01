@@ -7,18 +7,34 @@ class UDL extends PL {
     magPerPos: number
     label: string;
     type = CONST.UDL
+    index: any
+    relativeEndPos: number
 
 
-    constructor(magPerPos: number, startPos: number, endPos: number, direction: string, label: string) {
+    constructor({
+        magPerPos,
+        startPos,
+        endPos,
+        direction,
+        label,
+        index,
+        relativePos,
+        aPos,
+        relativeEndPos,
+    }:
+        any
+    ) {
         let distance = endPos - startPos;
+
         let mag = magPerPos * distance;
         let halfPos = distance / 2;
         let pos = halfPos + startPos;
 
-        super(mag, pos, direction, label);
+        super({ mag, pos, direction, label, index, relativePos: pos, aPos: pos });
         this.magPerPos = magPerPos;
         this.startPos = startPos;
         this.endPos = endPos;
+        this.relativeEndPos = relativeEndPos;
     }
 }
 

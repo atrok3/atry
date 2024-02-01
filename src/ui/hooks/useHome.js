@@ -23,6 +23,7 @@ const useDialogs = () => {
   const uDLDialog = useToggle();
   const activityDialog = useToggle();
   const mLDialog = useToggle();
+  const pSDialog = useToggle();
 
 
   return {
@@ -32,6 +33,7 @@ const useDialogs = () => {
     uDLDialog,
     activityDialog,
     mLDialog,
+    pSDialog,
   }
 }
 
@@ -46,7 +48,7 @@ const useHome = () => {
 
   const onClear = () => {
     Beam.clear();
-    Beam.drawMarked(0, 8);
+    Beam.drawMarked();
   }
 
   const onSolve = async () => {
