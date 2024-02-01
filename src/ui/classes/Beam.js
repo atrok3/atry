@@ -151,7 +151,7 @@ class Beam {
                 toPos,
                 DLine.dLineStartY
             )
-        new Mark(((toPos + fromPos) / 2), (load.startPos - loadIndex.pos))
+        new Mark(((toPos + fromPos) / 2), Beam.len)
 
         loads.forEach((load) => {
             if (load.index === "beamstart") return;
