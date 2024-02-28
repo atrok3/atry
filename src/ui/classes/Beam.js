@@ -75,9 +75,8 @@ class Beam {
     }
 
 
-    static drawRef() {
-        let fromPos = Beam.startX;
-        let toPos = Beam.endX;
+    static drawArrow(fromPos, toPos, text = null) {
+
         let context = Canvas.context;
 
         // left arrow
@@ -99,7 +98,15 @@ class Beam {
                 toPos,
                 DLine.dLineStartY
             )
-        new Mark(((toPos + fromPos) / 2), Beam.len)
+        new Mark(((toPos + fromPos) / 2), text)
+    }
+
+    static drawRef() {
+        let fromPos = Beam.startX;
+        let toPos = Beam.endX;
+
+
+        this.drawArrow(fromPos, toPos, Beam.len);
 
     }
 
@@ -163,82 +170,40 @@ class Beam {
 
 
         loads.forEach((load) => {
-            if (load.index === "beamstart") return;
-            if (load.index === "beamend") return;
 
-            let loadIndex = this.getLoadByIndex(load.index);
+            let loadIndex;
+
+            if (load.index === "beamstart") {
+
+                loadIndex = {
+                    offset: Beam.startX,
+                }
+            }else if (load.index === "beamend"){
+                loadIndex = {
+                    offset: Beam.endX,
+                }
+            }
+
+            else loadIndex = this.getLoadByIndex(load.index);
+            
             let fromPos = loadIndex.offset;
             let toPos = load.offset;
             if (toPos - fromPos <= 0) return;
             if (load.type == CONST.UDL) {
-                // left arrow
-                context.moveTo(fromPos, DLine.dLineStartY);
-                let _arrowhead = new ArrowHead()
-                _arrowhead
-                    .drawArrow(context,
-                        toPos,
-                        DLine.dLineStartY,
-                        fromPos,
-                        DLine.dLineStartY
-                    )
-                context.moveTo(toPos, DLine.dLineStartY);
-                let arrowhead = new ArrowHead()
-                arrowhead
-                    .drawArrow(context,
-                        fromPos,
-                        DLine.dLineStartY,
-                        toPos,
-                        DLine.dLineStartY
-                    )
-                new Mark(((toPos + fromPos) / 2), (load.startPos - loadIndex.pos))
+                this.drawArrow(fromPos, toPos, (load.startPos - loadIndex.pos));
 
             } else if (loadIndex.type == CONST.UDL) {
                 fromPos = loadIndex.endOffset;
                 if (toPos - fromPos <= 0) return;
-                // left arrow
-                context.moveTo(fromPos, DLine.dLineStartY);
-                let _arrowhead = new ArrowHead()
-                _arrowhead
-                    .drawArrow(context,
-                        toPos,
-                        DLine.dLineStartY,
-                        fromPos,
-                        DLine.dLineStartY
-                    )
-                context.moveTo(toPos, DLine.dLineStartY);
-                let arrowhead = new ArrowHead()
-                arrowhead
-                    .drawArrow(context,
-                        fromPos,
-                        DLine.dLineStartY,
-                        toPos,
-                        DLine.dLineStartY
-                    )
-                new Mark(((toPos + fromPos) / 2), Math.abs((load.pos - loadIndex.pos)))
+
+                this.drawArrow(fromPos, toPos, Math.abs((load.pos - loadIndex.pos)));
 
 
             } else {
-                // left arrow
-                context.moveTo(fromPos, DLine.dLineStartY);
-                let _arrowhead = new ArrowHead()
-                _arrowhead
-                    .drawArrow(context,
-                        toPos,
-                        DLine.dLineStartY,
-                        fromPos,
-                        DLine.dLineStartY
-                    )
-                context.moveTo(toPos, DLine.dLineStartY);
-                let arrowhead = new ArrowHead()
-                arrowhead
-                    .drawArrow(context,
-                        fromPos,
-                        DLine.dLineStartY,
-                        toPos,
-                        DLine.dLineStartY
-                    )
 
-                new Mark(((toPos + fromPos) / 2), (load.pos - loadIndex.pos))
+
+                this.drawArrow(fromPos, toPos, Math.abs((load.pos - loadIndex.pos)));
+
             }
 
         });
