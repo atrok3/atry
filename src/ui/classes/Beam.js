@@ -177,10 +177,12 @@ class Beam {
 
                 loadIndex = {
                     offset: Beam.startX,
+                    pos: 0,
                 }
             }else if (load.index === "beamend"){
                 loadIndex = {
                     offset: Beam.endX,
+                    pos: Beam.len,
                 }
             }
 
