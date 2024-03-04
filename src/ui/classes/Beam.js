@@ -162,7 +162,8 @@ class Beam {
         Canvas.context.clearRect(0, 0, Canvas.width, Canvas.height);
         Beam.draw();
         DLine.draw();
-        this.drawRef()
+        
+        if(loads.length < 2) this.drawRef()
 
         Beam.loads.forEach(load => load.draw());
         Beam.setLoads(loads);
